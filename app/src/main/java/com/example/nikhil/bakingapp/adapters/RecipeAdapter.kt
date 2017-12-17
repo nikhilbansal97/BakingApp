@@ -9,8 +9,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.example.nikhil.bakingapp.R
 import com.example.nikhil.bakingapp.Recipe
-
-import java.util.ArrayList
+import kotlin.collections.ArrayList
 
 /**
  * Created by NIKHIL on 14-12-2017.
@@ -23,7 +22,7 @@ class RecipeAdapter(context: Context, objects: ArrayList<Recipe>, listener: OnRe
     var recipeListener = listener
 
     interface OnRecipeClicked {
-        fun onRecipeSelected(position: Int)
+        fun onRecipeSelected(position: Int, list: ArrayList<Recipe>)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
@@ -41,7 +40,7 @@ class RecipeAdapter(context: Context, objects: ArrayList<Recipe>, listener: OnRe
         var currentRecipe = recipeList[position]
         holder!!.nameTextView!!.text = currentRecipe.name
         holder!!.nameTextView!!.setOnClickListener(View.OnClickListener {
-            recipeListener.onRecipeSelected(position)
+            recipeListener.onRecipeSelected(position, recipeList)
         })
     }
 

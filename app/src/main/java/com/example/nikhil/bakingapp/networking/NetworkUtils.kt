@@ -18,6 +18,9 @@ class NetworkUtils {
 
     companion object {
 
+        var ingredientsSelected: ArrayList<Ingredient> = ArrayList<Ingredient>()
+        var recipeSelected: String = String()
+
         fun getRecipesResponse(): String {
             // Create URL
             val url = URL("https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json")
