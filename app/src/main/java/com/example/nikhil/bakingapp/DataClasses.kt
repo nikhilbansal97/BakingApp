@@ -2,34 +2,25 @@ package com.example.nikhil.bakingapp
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.google.gson.annotations.SerializedName
 
 /**
  * Created by NIKHIL on 14-12-2017.
  */
 data class Recipe(
-        @SerializedName("id")
         var id: Int,
-        @SerializedName("name")
         var name: String,
-        @SerializedName("ingredients")
         var ingredients: ArrayList<Ingredient>,
-        @SerializedName("steps")
         var steps: ArrayList<Step>,
-        @SerializedName("servings")
         var servings: Int,
-        @SerializedName("image")
         var image: String
 )
 
+
 data class Ingredient(
-        @SerializedName("quantity")
         var quantity: Int,
-        @SerializedName("measure")
         var measure: String,
-        @SerializedName("ingredient")
         var ingredient: String
-) : Parcelable {
+): Parcelable {
     constructor(parcel: Parcel) : this(
             parcel.readInt(),
             parcel.readString(),
@@ -57,15 +48,10 @@ data class Ingredient(
 }
 
 data class Step(
-        @SerializedName("id")
         var id: Int,
-        @SerializedName("shortDescription")
         var shortDescription: String,
-        @SerializedName("description")
         var description: String,
-        @SerializedName("thumbnailURL")
         var thumbnailUrl: String,
-        @SerializedName("videoURL")
         var videoUrl: String
 ) : Parcelable {
     constructor(parcel: Parcel) : this(

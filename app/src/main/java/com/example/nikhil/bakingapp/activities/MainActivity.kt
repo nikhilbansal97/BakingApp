@@ -2,9 +2,9 @@ package com.example.nikhil.bakingapp.activities
 
 import android.app.Activity
 import android.appwidget.AppWidgetManager
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.AsyncTask
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -15,16 +15,12 @@ import android.util.Log
 import android.widget.RemoteViews
 import com.example.nikhil.bakingapp.R
 import com.example.nikhil.bakingapp.Recipe
+import com.example.nikhil.bakingapp.SimpleIdlingResource
 import com.example.nikhil.bakingapp.adapters.RecipeAdapter
-import com.example.nikhil.bakingapp.networking.ApiClient
 import com.example.nikhil.bakingapp.networking.NetworkUtils
 import com.example.nikhil.bakingapp.networking.NetworkUtils.Companion.getRecipesList
 import com.example.nikhil.bakingapp.networking.NetworkUtils.Companion.getRecipesResponse
-import com.example.nikhil.bakingapp.networking.RecipeInterface
 import com.example.nikhil.bakingapp.widget.IngredientsRemoteViewsService
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class MainActivity : AppCompatActivity() , RecipeAdapter.OnRecipeClicked {
 
@@ -34,6 +30,18 @@ class MainActivity : AppCompatActivity() , RecipeAdapter.OnRecipeClicked {
         var widgetSelectionActivity: Boolean = false
         var ACTION_WIDGET_CONFIGURE = "android.appwidget.action.APPWIDGET_CONFIGURE"
         lateinit var widgetIntent: Intent
+        var idlingResource: SimpleIdlingResource? = null
+    }
+
+    fun getIdlingResource(): SimpleIdlingResource{
+        if (idlingResource == null)
+            idlingResource = SimpleIdlingResource()
+        return idlingResource!!
+    }
+
+    override fun onStart() {
+        super.onStart()
+        RecipesAsyncTask().execute()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,33 +58,21 @@ class MainActivity : AppCompatActivity() , RecipeAdapter.OnRecipeClicked {
             editor.putInt("widgetId", widgetId)
             editor.commit()
         }
+        getIdlingResource()
 
         var recipeListView = findViewById<RecyclerView>(R.id.recipeListView)
         adapter = RecipeAdapter(baseContext, recipeList, this)
         recipeListView.adapter = adapter
         recipeListView.layoutManager = LinearLayoutManager(this)
         recipeListView.itemAnimator = DefaultItemAnimator()
-        var recipeInterface = ApiClient.getClient().create(RecipeInterface::class.java)
-        var call = recipeInterface.recipeList()
 
-        RecipesAsyncTask().execute()
-
-    }
-
-    fun callback(fn:(Throwable?, Response<ArrayList<Recipe>>)-> Unit): Callback<ArrayList<Recipe>> {
-        return object: Callback<ArrayList<Recipe>> {
-            override fun onResponse(call: Call<ArrayList<Recipe>>?, response: Response<ArrayList<Recipe>>?) {
-                var list = response!!.body()
-                adapter!!.notifyDatatSetChanged(list!!)
-            }
-
-            override fun onFailure(call: Call<ArrayList<Recipe>>?, t: Throwable?) {
-
-            }
-        }
     }
 
     class RecipesAsyncTask : AsyncTask<Unit, Unit, ArrayList<Recipe>>() {
+
+        override fun onPreExecute() {
+            idlingResource!!.setIdleState(false)
+        }
 
         override fun doInBackground(vararg params: Unit?): ArrayList<Recipe>? {
             val response = getRecipesResponse()
@@ -86,9 +82,9 @@ class MainActivity : AppCompatActivity() , RecipeAdapter.OnRecipeClicked {
         }
 
         override fun onPostExecute(result: ArrayList<Recipe>?) {
+            idlingResource!!.setIdleState(true)
             recipeList = result!!
             adapter!!.notifyDatatSetChanged(result!!)
-
         }
 
     }
@@ -119,21 +115,24 @@ class MainActivity : AppCompatActivity() , RecipeAdapter.OnRecipeClicked {
 
             NetworkUtils.ingredientsSelected.clear()
             NetworkUtils.ingredientsSelected.addAll(ingredientList)
-//            if (appWidgetManager.getAppWidgetIds(ComponentName(baseContext, "MainActivity.kt")).isEmpty()){
-//            }
 
             // Get the id of the widget
             var bundle = widgetIntent.extras
             var widgetId = bundle.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
 
-
             val views = RemoteViews(this.packageName, R.layout.recipe_ingredients_widget)
             views.setTextViewText(R.id.widgetRecipeName, recipe.name)
 
+            var optionsBundle = Bundle()
+            optionsBundle.putParcelableArrayList("ingredients", ingredientList)
+
             val intent = Intent(this, IngredientsRemoteViewsService::class.java)
+            intent.data = Uri.fromParts("content", widgetId.toString(), null)
+            intent.putExtras(optionsBundle)
             views.setRemoteAdapter(R.id.widgetIngredientListView, intent)
 
             // Instruct the widget manager to update the widget
+         //   appWidgetManager.updateAppWidgetOptions(widgetId, optionsBundle)
             appWidgetManager.updateAppWidget(widgetId, views)
 
             // Close the activity

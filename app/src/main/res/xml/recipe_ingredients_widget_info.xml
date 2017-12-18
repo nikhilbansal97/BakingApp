@@ -4,10 +4,10 @@
     android:initialLayout="@layout/recipe_ingredients_widget"
     android:minHeight="300dp"
     android:minWidth="300dp"
-    android:previewImage="@drawable/example_appwidget_preview"
+    android:previewImage="@drawable/baking_app"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="86400000"
     android:configure="com.example.nikhil.bakingapp.activities.MainActivity"
-    android:widgetCategory="home_screen"></appwidget-provider>
+    android:widgetCategory="home_screen"/>
 
 <!--android:updatePeriodMillis="86400000" -->

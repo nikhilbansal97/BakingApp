@@ -1,7 +1,9 @@
 package com.example.nikhil.bakingapp.widget
 
+import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import com.example.nikhil.bakingapp.Ingredient
@@ -14,11 +16,11 @@ import com.example.nikhil.bakingapp.networking.NetworkUtils
 class IngredientsRemoteViewsService : RemoteViewsService() {
 
     override fun onGetViewFactory(intent: Intent?): RemoteViewsFactory {
-        return IngredientsRemoteViewsFactory(applicationContext)
+        return IngredientsRemoteViewsFactory(applicationContext, intent!!)
     }
 }
 
-class IngredientsRemoteViewsFactory(var context: Context): RemoteViewsService.RemoteViewsFactory {
+class IngredientsRemoteViewsFactory(var context: Context, var intent: Intent): RemoteViewsService.RemoteViewsFactory {
 
     var mIngredientsList: ArrayList<Ingredient> = ArrayList<Ingredient>()
 
@@ -32,6 +34,11 @@ class IngredientsRemoteViewsFactory(var context: Context): RemoteViewsService.Re
 
     override fun onCreate() {
         mIngredientsList = NetworkUtils.ingredientsSelected
+        var data = intent.data
+        var widgetId = data.schemeSpecificPart
+        Log.v("Factory", widgetId)
+//        var options = AppWidgetManager.getInstance(context).getAppWidgetOptions(widgetId.toInt())
+//        Log.d("Factory", options.getParcelableArrayList<Ingredient>("ingredients")[0].ingredient)
     }
 
     override fun onDataSetChanged() {

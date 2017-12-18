@@ -29,8 +29,9 @@
 
         <TextView
             android:id="@+id/recipeIngredients"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="5dp"
             android:layout_marginTop="8dp"
             android:text="Ingredients : "
             android:textSize="28sp"
@@ -40,21 +41,23 @@
             android:id="@+id/ingredientsList"
             android:layout_width="match_parent"
             android:layout_height="250dp"
-            android:layout_marginTop="10dp"/>
+            android:paddingTop="10dp"/>
 
         <TextView
             android:id="@+id/recipeSteps"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:textSize="28sp"
+            android:padding="5dp"
             android:text="Steps : "
             android:textStyle="bold"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recipeSteps_recycler"
             android:layout_width="match_parent"
-            android:layout_height="250dp" />
+            android:layout_height="250dp"
+            android:paddingTop="10dp"/>
 
     </LinearLayout>
 </ScrollView>
