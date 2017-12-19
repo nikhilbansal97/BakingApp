@@ -2,6 +2,7 @@ package com.example.nikhil.bakingapp.activities
 
 import android.app.Activity
 import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -21,6 +22,7 @@ import com.example.nikhil.bakingapp.networking.NetworkUtils
 import com.example.nikhil.bakingapp.networking.NetworkUtils.Companion.getRecipesList
 import com.example.nikhil.bakingapp.networking.NetworkUtils.Companion.getRecipesResponse
 import com.example.nikhil.bakingapp.widget.IngredientsRemoteViewsService
+import com.example.nikhil.bakingapp.widget.RecipeIngredientsWidgetProvider
 
 class MainActivity : AppCompatActivity() , RecipeAdapter.OnRecipeClicked {
 
@@ -108,32 +110,27 @@ class MainActivity : AppCompatActivity() , RecipeAdapter.OnRecipeClicked {
             intent.putExtras(bundle)
             startActivity(intent)
         } else {
-            // Get AppWidgetManager and update the appWidgetOptions for the widget.
-            var appWidgetManager = AppWidgetManager.getInstance(this)
-
-            var ingredientList = recipe.ingredients
 
             NetworkUtils.ingredientsSelected.clear()
-            NetworkUtils.ingredientsSelected.addAll(ingredientList)
+            NetworkUtils.ingredientsSelected.addAll(recipe.ingredients)
 
             // Get the id of the widget
             var bundle = widgetIntent.extras
             var widgetId = bundle.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
+            Log.v("MainActivity", "Widget id received is $widgetId")
 
-            val views = RemoteViews(this.packageName, R.layout.recipe_ingredients_widget)
-            views.setTextViewText(R.id.widgetRecipeName, recipe.name)
+            val appWidgetManager = AppWidgetManager.getInstance(this)
+            var appWidgetOptions = appWidgetManager.getAppWidgetOptions(widgetId)
 
-            var optionsBundle = Bundle()
-            optionsBundle.putParcelableArrayList("ingredients", ingredientList)
+            appWidgetOptions.putString("recipeName", recipe.name)
+            appWidgetManager.updateAppWidgetOptions(widgetId, appWidgetOptions)
 
-            val intent = Intent(this, IngredientsRemoteViewsService::class.java)
-            intent.data = Uri.fromParts("content", widgetId.toString(), null)
-            intent.putExtras(optionsBundle)
-            views.setRemoteAdapter(R.id.widgetIngredientListView, intent)
-
-            // Instruct the widget manager to update the widget
-         //   appWidgetManager.updateAppWidgetOptions(widgetId, optionsBundle)
-            appWidgetManager.updateAppWidget(widgetId, views)
+            var providerIntent = Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE,null, this, RecipeIngredientsWidgetProvider::class.java)
+            var ids = IntArray(1)
+            ids[0] = widgetId
+            Log.v("MainActivity", "Widget ids are $ids")
+            providerIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
+            sendBroadcast(providerIntent)
 
             // Close the activity
             val returnIntent = Intent()

@@ -8,6 +8,7 @@ import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import com.example.nikhil.bakingapp.Ingredient
 import com.example.nikhil.bakingapp.R
+import com.example.nikhil.bakingapp.R.id.recipeName
 import com.example.nikhil.bakingapp.networking.NetworkUtils
 
 /**
@@ -34,11 +35,6 @@ class IngredientsRemoteViewsFactory(var context: Context, var intent: Intent): R
 
     override fun onCreate() {
         mIngredientsList = NetworkUtils.ingredientsSelected
-        var data = intent.data
-        var widgetId = data.schemeSpecificPart
-        Log.v("Factory", widgetId)
-//        var options = AppWidgetManager.getInstance(context).getAppWidgetOptions(widgetId.toInt())
-//        Log.d("Factory", options.getParcelableArrayList<Ingredient>("ingredients")[0].ingredient)
     }
 
     override fun onDataSetChanged() {
