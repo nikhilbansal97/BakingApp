@@ -11,16 +11,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.MainActivity">
+        <activity android:name=".activities.MainActivity"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.RecipeActivity" />
-        <activity android:name=".activities.StepActivity" />
-
+        <activity android:name=".activities.RecipeActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.MainActivity"/>
+        <activity
+            android:name=".activities.StepActivity"
+            android:parentActivityName=".activities.RecipeActivity"/>
         <receiver android:name=".widget.RecipeIngredientsWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -33,7 +38,7 @@
 
         <service
             android:name=".widget.IngredientsRemoteViewsService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"/>
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
 
     </application>
 
