@@ -29,9 +29,9 @@ import java.util.ArrayList
 
 class MainActivity : AppCompatActivity(), RecipeAdapter.OnRecipeClicked {
 
-    private var adapter: RecipeAdapter? = null
+    private lateinit var adapter: RecipeAdapter
     private var recipeList = ArrayList<Recipe>()
-    private var widgetSelectionActivity: Boolean? = false
+    private var widgetSelectionActivity: Boolean = false
     private val ACTION_WIDGET_CONFIGURE = "android.appwidget.action.APPWIDGET_CONFIGURE"
     private var widgetIntent: Intent? = null
     private var idlingResource: SimpleIdlingResource? = null
@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity(), RecipeAdapter.OnRecipeClicked {
     override fun onRecipeSelected(position: Int, list: ArrayList<Recipe>) {
         val recipe = recipeList[position]
 
-        if (widgetSelectionActivity!!.not()) {
+        if (widgetSelectionActivity.not()) {
             val intent = Intent(baseContext, RecipeActivity::class.java)
             // Create Bundle to send in the Intent
             val bundle = Bundle()
@@ -139,7 +139,7 @@ class MainActivity : AppCompatActivity(), RecipeAdapter.OnRecipeClicked {
         override fun onPostExecute(recipes: ArrayList<Recipe>) {
             idlingResource!!.setIdleState(true)
             recipeList = recipes
-            adapter!!.notifyDataSetChanged(recipes)
+            adapter.notifyDataSetChanged(recipes)
         }
     }
 }

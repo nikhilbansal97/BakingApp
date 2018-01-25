@@ -12,9 +12,9 @@ import com.example.nikhil.bakingapp.pojos.Ingredient
 import java.util.ArrayList
 
 
-class IngredientsRemoteViewsFactory(private val context: Context, private val intent: Intent) : RemoteViewsService.RemoteViewsFactory {
+class IngredientsRemoteViewsFactory(private val context: Context) : RemoteViewsService.RemoteViewsFactory {
 
-    private var ingredientsList: ArrayList<Ingredient>? = ArrayList()
+    private var ingredientsList: ArrayList<Ingredient> = ArrayList()
 
     override fun onCreate() {
         ingredientsList = NetworkUtils.ingredientsSelected
@@ -25,12 +25,12 @@ class IngredientsRemoteViewsFactory(private val context: Context, private val in
     override fun onDestroy() {}
 
     override fun getCount(): Int {
-        return if (ingredientsList == null) 0 else ingredientsList!!.size
+        return if (ingredientsList == null) 0 else ingredientsList.size
     }
 
     override fun getViewAt(position: Int): RemoteViews {
         val views = RemoteViews(context.packageName, R.layout.list_item_ingredient)
-        val ingredient = ingredientsList!![position]
+        val ingredient = ingredientsList[position]
         views.setTextViewText(R.id.ingredientName, ingredient.ingredient)
         views.setTextViewText(R.id.ingredientMeasure, ingredient.quantity.toString() + " " + ingredient.measure)
         return views

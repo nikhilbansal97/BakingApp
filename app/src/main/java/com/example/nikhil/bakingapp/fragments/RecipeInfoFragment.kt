@@ -29,11 +29,11 @@ import java.util.ArrayList
 
 class RecipeInfoFragment : Fragment(), StepsAdapter.OnStepsClicked {
     private var recipeBundle: Bundle? = null
-    private var isTwoPane: Boolean? = false
+    private var isTwoPane: Boolean = false
     private var listener: OnTwoPaneStepsClicked? = null
 
     override fun onStepClicked(step: Step) {
-        if (isTwoPane!!) {
+        if (isTwoPane) {
             listener!!.twoPaneStepClicked(step)
         } else {
             val intent = Intent(context, StepActivity::class.java)
@@ -49,42 +49,38 @@ class RecipeInfoFragment : Fragment(), StepsAdapter.OnStepsClicked {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater!!.inflate(R.layout.fragment_recipe_info, container, false)
 
-        val textView_name = view.findViewById<TextView>(R.id.recipeName)
-        val textView_servings = view.findViewById<TextView>(R.id.recipeServings)
-        val recycler_ingredients = view.findViewById<RecyclerView>(R.id.ingredientsList)
-        val recycler_steps = view.findViewById<RecyclerView>(R.id.recipeSteps_recycler)
+        val textViewName = view.findViewById<TextView>(R.id.recipeName)
+        val textViewServings = view.findViewById<TextView>(R.id.recipeServings)
+        val recyclerIngredients = view.findViewById<RecyclerView>(R.id.ingredientsList)
+        val recyclerSteps = view.findViewById<RecyclerView>(R.id.recipeSteps_recycler)
 
         if (savedInstanceState != null) {
             recipeBundle = savedInstanceState.getBundle("recipeBundle")
-            Toast.makeText(context, "savedInstanceState != null", Toast.LENGTH_SHORT).show()
             Log.d(TAG, "onCreateView: savedInstanceState != null")
         } else {
-            Toast.makeText(context, "savedInstanceState == null", Toast.LENGTH_SHORT).show()
             Log.d(TAG, "onCreateView: savedInstanceState == null")
         }
 
         if (recipeBundle != null) {
-            textView_name.text = "Recipe : " + recipeBundle!!.getString("recipeName")!!
-            textView_servings.text = "Servings : " + recipeBundle!!.getInt("recipeServings")
+            textViewName.text = "Recipe : " + recipeBundle!!.getString("recipeName")!!
+            textViewServings.text = "Servings : " + recipeBundle!!.getInt("recipeServings")
             val ingredientsList = recipeBundle!!.getParcelableArrayList<Ingredient>("recipeIngredients")
 
             val adapter = IngredientsAdapter(context, ingredientsList!!)
-            recycler_ingredients.adapter = adapter
-            recycler_ingredients.layoutManager = LinearLayoutManager(context)
-            recycler_ingredients.itemAnimator = DefaultItemAnimator()
+            recyclerIngredients.adapter = adapter
+            recyclerIngredients.layoutManager = LinearLayoutManager(context)
+            recyclerIngredients.itemAnimator = DefaultItemAnimator()
 
             val stepsList = recipeBundle!!.getParcelableArrayList<Step>("recipeSteps")
 
             val stepsAdapter = StepsAdapter(context, stepsList, this)
-            recycler_steps.layoutManager = LinearLayoutManager(context)
-            recycler_steps.itemAnimator = DefaultItemAnimator()
-            recycler_steps.adapter = stepsAdapter
+            recyclerSteps.layoutManager = LinearLayoutManager(context)
+            recyclerSteps.itemAnimator = DefaultItemAnimator()
+            recyclerSteps.adapter = stepsAdapter
 
         } else {
-            Toast.makeText(context, "recipeBundle == null", Toast.LENGTH_SHORT).show()
+            Log.d("RecipeInfoFragment", "recipeBundle == null");
         }
-
-
         return view
     }
 
@@ -92,7 +88,7 @@ class RecipeInfoFragment : Fragment(), StepsAdapter.OnStepsClicked {
         this.recipeBundle = recipeBundle
     }
 
-    fun setTwoPane(twoPane: Boolean?) {
+    fun setTwoPane(twoPane: Boolean) {
         isTwoPane = twoPane
     }
 
@@ -106,7 +102,6 @@ class RecipeInfoFragment : Fragment(), StepsAdapter.OnStepsClicked {
     }
 
     companion object {
-
         private val TAG = "RecipeInfoFragment"
     }
 }

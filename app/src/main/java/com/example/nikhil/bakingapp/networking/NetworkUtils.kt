@@ -24,7 +24,6 @@ import java.util.Scanner
 object NetworkUtils {
 
     var ingredientsSelected = ArrayList<Ingredient>()
-    var recipeSelected = String()
 
     val recipesResponse: String
         @Throws(IOException::class)
@@ -64,12 +63,12 @@ object NetworkUtils {
                 val steps = recipeObject.getJSONArray("steps")
                 for (j in 0 until steps.length()) {
                     val step = steps.getJSONObject(j)
-                    val id_step = step.getInt("id")
+                    val idStep = step.getInt("id")
                     val shortDescription = step.getString("shortDescription")
                     val description = step.getString("description")
                     val videoUrl = step.getString("videoURL")
                     val thumbnailUrl = step.getString("thumbnailURL")
-                    stepsList.add(Step(id_step, shortDescription, description, thumbnailUrl, videoUrl))
+                    stepsList.add(Step(idStep, shortDescription, description, thumbnailUrl, videoUrl))
                 }
                 val servings = recipeObject.getInt("servings")
                 val image = recipeObject.getString("image")
@@ -79,7 +78,6 @@ object NetworkUtils {
         } catch (e: JSONException) {
             e.printStackTrace()
         }
-
         return recipeList
     }
 }

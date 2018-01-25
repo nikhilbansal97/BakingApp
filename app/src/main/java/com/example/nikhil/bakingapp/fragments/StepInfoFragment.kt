@@ -47,13 +47,13 @@ class StepInfoFragment : Fragment() {
             playState = savedInstanceState.getBoolean("playState")
             position = savedInstanceState.getLong("position")
         }
-        val textView_shortDes = view.findViewById<TextView>(R.id.stepShortDescription)
-        val textView_Des = view.findViewById<TextView>(R.id.stepDescription)
+        val textViewShortDes = view.findViewById<TextView>(R.id.stepShortDescription)
+        val textViewDes = view.findViewById<TextView>(R.id.stepDescription)
         val stepThumbnail = view.findViewById<ImageView>(R.id.stepthumbnail)
         playerNotAvailableView = view.findViewById(R.id.playerNotAvailable)
         exoPlayerView = view.findViewById(R.id.simpleExoPlayerView)
-        textView_shortDes.text = step!!.shortDescription
-        textView_Des.text = step!!.description
+        textViewShortDes.text = step!!.shortDescription
+        textViewDes.text = step!!.description
         val thumbnailUrl = step!!.thumbnail
         if (thumbnailUrl == null || thumbnailUrl.isEmpty() || thumbnailUrl.contains(".mp4"))
             stepThumbnail.visibility = View.GONE
