@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 27
@@ -33,8 +34,18 @@ dependencies {
     implementation "com.android.support:recyclerview-v7:$support_version"
     implementation "com.google.android.exoplayer:exoplayer:$exoplayer_version"
     implementation "com.android.support.test.espresso:espresso-idling-resource:$espresso_idling_version"
-    // 3rd Party Library : Picasso
+
+    // Picasso
     implementation "com.squareup.picasso:picasso:$picasso_version"
+
+    // Dagger 2 and Dagger-Android
+    implementation "com.google.dagger:dagger:$dagger_version"
+    implementation "com.google.dagger:dagger-android:$dagger_version"
+    implementation "com.google.dagger:dagger-android-support:$dagger_version"
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+    kapt "com.google.dagger:dagger-android-processor:$dagger_version"
+
+    // Espresso
     testImplementation 'junit:junit:4.12'
     androidTestImplementation "com.android.support.test:runner:$junit_runner_version"
     androidTestImplementation "com.android.support.test.espresso:espresso-contrib:$espresso_version"
