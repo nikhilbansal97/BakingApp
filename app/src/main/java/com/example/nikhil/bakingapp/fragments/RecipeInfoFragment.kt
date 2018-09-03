@@ -46,7 +46,7 @@ class RecipeInfoFragment : Fragment(), StepsAdapter.OnStepsClicked {
         fun twoPaneStepClicked(step: Step)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater!!.inflate(R.layout.fragment_recipe_info, container, false)
 
         val textViewName = view.findViewById<TextView>(R.id.recipeName)
@@ -66,14 +66,14 @@ class RecipeInfoFragment : Fragment(), StepsAdapter.OnStepsClicked {
             textViewServings.text = "Servings : " + recipeBundle!!.getInt("recipeServings")
             val ingredientsList = recipeBundle!!.getParcelableArrayList<Ingredient>("recipeIngredients")
 
-            val adapter = IngredientsAdapter(context, ingredientsList!!)
+            val adapter = IngredientsAdapter(context!!, ingredientsList!!)
             recyclerIngredients.adapter = adapter
             recyclerIngredients.layoutManager = LinearLayoutManager(context)
             recyclerIngredients.itemAnimator = DefaultItemAnimator()
 
             val stepsList = recipeBundle!!.getParcelableArrayList<Step>("recipeSteps")
 
-            val stepsAdapter = StepsAdapter(context, stepsList, this)
+            val stepsAdapter = StepsAdapter(context!!, stepsList, this)
             recyclerSteps.layoutManager = LinearLayoutManager(context)
             recyclerSteps.itemAnimator = DefaultItemAnimator()
             recyclerSteps.adapter = stepsAdapter
@@ -96,7 +96,7 @@ class RecipeInfoFragment : Fragment(), StepsAdapter.OnStepsClicked {
         this.listener = listener
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState!!.putBundle("recipeBundle", recipeBundle)
     }

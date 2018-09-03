@@ -47,7 +47,7 @@ class RecipeAdapter(private val context: Context, recipeList: ArrayList<Recipe>,
         if (currentRecipe.image.isEmpty()) {
             holder.nameImageView.visibility = View.GONE
         } else {
-            Picasso.with(context).load(currentRecipe.image).into(holder.nameImageView)
+            Picasso.get().load(currentRecipe.image).into(holder.nameImageView)
         }
     }
 

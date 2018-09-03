@@ -39,7 +39,7 @@ class StepInfoFragment : Fragment() {
         this.step = step
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater!!.inflate(R.layout.fragment_step_info, container, false)
 
         if (savedInstanceState != null) {
@@ -58,12 +58,12 @@ class StepInfoFragment : Fragment() {
         if (thumbnailUrl == null || thumbnailUrl.isEmpty() || thumbnailUrl.contains(".mp4"))
             stepThumbnail.visibility = View.GONE
         else
-            Picasso.with(context).load(thumbnailUrl).into(stepThumbnail)
+            Picasso.get().load(thumbnailUrl).into(stepThumbnail)
         initializePlayer()
         return view
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState!!.putParcelable("step", step)
         outState.putBoolean("playState", exoPlayer!!.playWhenReady)
